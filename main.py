@@ -9,7 +9,7 @@ from modules.weather import inline_weather, setup_tools_weather
 from modules.wiki import inline_wiki, setup_tools_wiki
 from modules.ping import inline_ping, setup_tools_ping
 
-API_TOKEN = '7173460927:AAH3WNGS32eOtHCrqrySVODVBh_jXv8NJls'
+API_TOKEN = '7444946939:AAGzQG_Qega-XtJRcr50y4r2ndMhzbXen3Q'
 AUTHORIZED_USER_ID = 6184515646
 
 bot = Bot(token=API_TOKEN)
