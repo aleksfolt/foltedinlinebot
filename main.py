@@ -62,4 +62,5 @@ if __name__ == "__main__":
     setup_tools_search(dp)
     setup_tools_wiki(dp)
     setup_tools_ping(dp, bot)
+    setup_tools_qr(dp)
     dp.run_polling(bot)
