@@ -23,14 +23,18 @@ async def inline_search(inline_query: InlineQuery):
 
     try:
         async with AsyncDDGS() as ddgs:
-            results = ddgs.text(search_query, max_results=10)
+            results = await ddgs.text(search_query, max_results=10)
+            if not results: 
+                logging.info("No results found, retrying...")
+                await asyncio.sleep(0.5) 
+                results = await ddgs.text(search_query, max_results=10)
     except Exception as e:
         logging.error(f"Error while searching: {e}")
         await inline_query.answer([], cache_time=0)
         return
 
     if not results:
-        logging.info("No results found.")
+        logging.info("No results found after retry.")
         await inline_query.answer([], cache_time=0)
         return
 
