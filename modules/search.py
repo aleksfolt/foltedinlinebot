@@ -23,7 +23,7 @@ async def inline_search(inline_query: InlineQuery):
 
     async with AsyncDDGS() as ddgs:
         try:
-            results = await ddgs.text(search_query, max_results=15)
+            results = ddgs.text(search_query, max_results=15)
         except Exception as e:
             logging.error(f"Error while searching: {e}")
             await inline_query.answer([], cache_time=0)
