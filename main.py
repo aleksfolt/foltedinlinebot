@@ -9,18 +9,16 @@ from modules.weather import inline_weather, setup_tools_weather
 from modules.wiki import inline_wiki, setup_tools_wiki
 from modules.ping import inline_ping, setup_tools_ping
 from modules.qr import inline_qr, setup_tools_qr
+import config
 
-API_TOKEN = '7444946939:AAGzQG_Qega-XtJRcr50y4r2ndMhzbXen3Q'
-AUTHORIZED_USER_ID = 6184515646
-
-bot = Bot(token=API_TOKEN)
+bot = Bot(token=config.API_TOKEN)
 dp = Dispatcher(storage=MemoryStorage())
 
 
 @dp.inline_query()
 async def inline_handler(inline_query: types.InlineQuery):
     user_id = inline_query.from_user.id
-    if user_id != AUTHORIZED_USER_ID:
+    if user_id != config.AUTHORIZED_USER_ID:
         await inline_query.answer(
             results=[],
             cache_time=0,
