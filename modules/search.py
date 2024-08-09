@@ -23,7 +23,7 @@ async def inline_search(inline_query: InlineQuery):
 
     try:
         async with AsyncDDGS() as ddgs:
-            results = await ddgs.text(search_query, max_results=10)
+            results = ddgs.text(search_query, max_results=10)
             if not results: 
                 logging.info("No results found, retrying...")
                 await asyncio.sleep(0.5) 
