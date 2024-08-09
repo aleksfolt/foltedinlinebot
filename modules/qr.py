@@ -17,7 +17,7 @@ async def inline_qr(inline_query: InlineQuery):
     
     input_content = InputTextMessageContent(message_text=f"Your Qr: {qr_code_url}")
     
-    result_id= hashlib.md5(city.encode()).hexdigest()
+    result_id= hashlib.md5(qr_code_url.encode()).hexdigest()
     
     item=InlineQueryResultArticle(
         id=result_id,
