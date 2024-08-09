@@ -5,7 +5,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 import requests
 
 
-async def inline_qr(inline_query: InlineQuery, bot):
+async def inline_qr(inline_query: InlineQuery):
     query_text= inline_query.query.lower()
     
     base_url= "https://api.qrserver.com/v1/create-qr-code/"
