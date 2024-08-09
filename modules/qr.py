@@ -4,11 +4,17 @@ from aiogram.types import InlineQuery, InlineQueryResultArticle, InputTextMessag
 import hashlib
 
 async def inline_qr(inline_query: InlineQuery):
-    query_text = inline_query.query
+    query_text = inline_query.query.strip()
+    
+    if query_text.startswith("qr "):
+        query_text_after_qr = query_text[3:].strip()
+    else:
+        query_text_after_qr = query_text
+
     base_url = "https://api.qrserver.com/v1/create-qr-code/"
     params = {
         "size": "300x300",
-        "data": query_text
+        "data": query_text_after_qr
     }
     qr_code_url = f"{base_url}?size={params['size']}&data={params['data']}"
     
