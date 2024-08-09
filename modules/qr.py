@@ -3,7 +3,7 @@ from aiogram import types
 from aiogram.types import InlineQuery, InlineQueryResultArticle, InputTextMessageContent, InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 import requests
-
+import hashlib
 
 async def inline_qr(inline_query: InlineQuery):
     query_text= inline_query.query.lower()
