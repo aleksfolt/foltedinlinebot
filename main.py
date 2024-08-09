@@ -8,6 +8,7 @@ from modules.search import inline_search, setup_tools_search
 from modules.weather import inline_weather, setup_tools_weather
 from modules.wiki import inline_wiki, setup_tools_wiki
 from modules.ping import inline_ping, setup_tools_ping
+from modules.qr import inline_qr, setup_tools_qr
 
 API_TOKEN = '7444946939:AAGzQG_Qega-XtJRcr50y4r2ndMhzbXen3Q'
 AUTHORIZED_USER_ID = 6184515646
@@ -37,12 +38,14 @@ async def inline_handler(inline_query: types.InlineQuery):
         await inline_search(inline_query)
     elif query_text.startswith("wiki"):
         await inline_wiki(inline_query)
-    elif query_text.startswith("ping"):
+    elif query_text == "ping":
         await inline_ping(inline_query, bot)
     elif query_text == "ily":
         await inline_ily(inline_query)
-    elif query_text.startswith("sysinfo"):
+    elif query_text == "sysinfo":
         await inline_system_info(inline_query)
+    elif query_text.startswith("qr"):
+        await inline_qr(inline_query) 
 
 
 @dp.chosen_inline_result()
