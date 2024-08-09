@@ -6,7 +6,7 @@ import requests
 import hashlib
 
 async def inline_qr(inline_query: InlineQuery):
-    query_text= inline_query.query.lower()
+     _, query_text = query_text.split(maxsplit=1)
     
     base_url= "https://api.qrserver.com/v1/create-qr-code/"
     params= {
