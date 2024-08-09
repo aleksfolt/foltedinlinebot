@@ -21,13 +21,18 @@ async def inline_search(inline_query: InlineQuery):
         await inline_query.answer([], cache_time=0)
         return
 
-    async with AsyncDDGS() as ddgs:
-        try:
-            results = ddgs.text(search_query, max_results=15)
-        except Exception as e:
-            logging.error(f"Error while searching: {e}")
-            await inline_query.answer([], cache_time=0)
-            return
+    try:
+        async with AsyncDDGS() as ddgs:
+            results = ddgs.text(search_query, max_results=10)
+    except Exception as e:
+        logging.error(f"Error while searching: {e}")
+        await inline_query.answer([], cache_time=0)
+        return
+
+    if not results:
+        logging.info("No results found.")
+        await inline_query.answer([], cache_time=0)
+        return
 
     articles = []
     for result in results:
@@ -42,7 +47,10 @@ async def inline_search(inline_query: InlineQuery):
         )
         articles.append(item)
 
-    await inline_query.answer(articles, cache_time=0)
+    try:
+        await inline_query.answer(articles, cache_time=0)
+    except Exception as e:
+        logging.error(f"Error while answering inline query: {e}")
 
 def setup_tools_search(dp):
     pass
