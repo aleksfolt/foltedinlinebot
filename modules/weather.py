@@ -1,15 +1,14 @@
 import requests
 import hashlib
 from aiogram.types import InlineQuery, InlineQueryResultArticle, InputTextMessageContent
-
-WEATHER_API_KEY = 'db9cfb630c4abb144cf1f537a9e67bc2'
+import config
 
 
 async def inline_weather(inline_query: InlineQuery):
     query_text = inline_query.query.lower()
     print(".")
     _, city = query_text.split(maxsplit=1)
-    response = requests.get(f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={WEATHER_API_KEY}")
+    response = requests.get(f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={config.WEATHER_API_KEY}")
     weather_data = response.json()
     weather_desc = weather_data["weather"][0]["description"]
     temp = weather_data["main"]["temp"] - 273.15
