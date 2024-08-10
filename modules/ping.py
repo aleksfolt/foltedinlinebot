@@ -24,22 +24,32 @@ async def inline_ping(inline_query: InlineQuery, bot):
 
 
 async def ping_callback_handler(callback_query: types.CallbackQuery, bot):
-    ping_start_time = time.time()
-
     await bot.answer_callback_query(callback_query.id, text="Pinging...")
 
-    ping_end_time = time.time()
-    ping_time = round((ping_end_time - ping_start_time) * 1000)
-
     if callback_query.message:
+        ping_start_time = time.time()
         await bot.edit_message_text(
-            text=f"🌕\nPing: {ping_time} ms",
+            text=f"🌕", '''Ping: {ping_time} ms'''
+            chat_id=callback_query.message.chat.id,
+            message_id=callback_query.message.message_id
+        )
+        ping_end_time = time.time()
+        ping_time = round((ping_end_time - ping_start_time) * 1000)
+        await bot.edit_message_text(
+            text=f"Ping: {ping_time} ms",
             chat_id=callback_query.message.chat.id,
             message_id=callback_query.message.message_id
         )
     elif callback_query.inline_message_id:
+        ping_start_time = time.time()
         await bot.edit_message_text(
-            text=f"🌕\nPing: {ping_time} ms",
+            text=f"🌕",
+            inline_message_id=callback_query.inline_message_id
+        )
+        ping_end_time = time.time()
+        ping_time = round((ping_end_time - ping_start_time) * 1000)
+        await bot.edit_message_text(
+            text=f"Ping: {ping_time} ms",
             inline_message_id=callback_query.inline_message_id
         )
     else:
