@@ -9,6 +9,7 @@ from modules.weather import inline_weather, setup_tools_weather
 from modules.wiki import inline_wiki, setup_tools_wiki
 from modules.ping import inline_ping, setup_tools_ping
 from modules.qr import inline_qr, setup_tools_qr
+from modules.tinyurl import inline_tinyurl, setup_tools_tinyurl
 import config
 
 bot = Bot(token=config.API_TOKEN)
@@ -44,6 +45,8 @@ async def inline_handler(inline_query: types.InlineQuery):
         await inline_system_info(inline_query)
     elif query_text.startswith("qr"):
         await inline_qr(inline_query) 
+    elif query_text.startswith("url")
+    	await inline_tinyurl(inline_query)
 
 
 @dp.chosen_inline_result()
@@ -61,4 +64,5 @@ if __name__ == "__main__":
     setup_tools_wiki(dp)
     setup_tools_ping(dp, bot)
     setup_tools_qr(dp)
+    setup_tools_tinyurl(dp)
     dp.run_polling(bot)
