@@ -45,7 +45,7 @@ async def inline_handler(inline_query: types.InlineQuery):
         await inline_system_info(inline_query)
     elif query_text.startswith("qr"):
         await inline_qr(inline_query) 
-    elif query_text.startswith("url")
+    elif query_text.startswith("url"):
     	await inline_tinyurl(inline_query)
 
 
