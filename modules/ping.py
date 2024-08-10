@@ -3,6 +3,7 @@ import hashlib
 from aiogram import types
 from aiogram.types import InlineQuery, InlineQueryResultArticle, InputTextMessageContent, InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
+import config
 
 
 async def inline_ping(inline_query: InlineQuery, bot):
@@ -24,12 +25,18 @@ async def inline_ping(inline_query: InlineQuery, bot):
 
 
 async def ping_callback_handler(callback_query: types.CallbackQuery, bot):
+    allowed_user_id = config.AUTHORIZED_USER_ID
+
+    if callback_query.from_user.id != allowed_user_id:
+        await bot.answer_callback_query(callback_query.id, text="You are not authorized to use this button.", show_alert=True)
+        return
+
     await bot.answer_callback_query(callback_query.id, text="Pinging...")
 
     if callback_query.message:
         ping_start_time = time.time()
         await bot.edit_message_text(
-            text=f"🌕",  # Here was the issue
+            text=f"🌕",
             chat_id=callback_query.message.chat.id,
             message_id=callback_query.message.message_id
         )
@@ -43,7 +50,7 @@ async def ping_callback_handler(callback_query: types.CallbackQuery, bot):
     elif callback_query.inline_message_id:
         ping_start_time = time.time()
         await bot.edit_message_text(
-            text=f"🌕",  # Here was the issue
+            text=f"🌕", 
             inline_message_id=callback_query.inline_message_id
         )
         ping_end_time = time.time()
