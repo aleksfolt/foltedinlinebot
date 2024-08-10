@@ -31,6 +31,7 @@ async def ping_callback_handler(callback_query: types.CallbackQuery, bot):
     ping_end_time = time.time()
     ping_time = round((ping_end_time - ping_start_time) * 1000)
     print(callback_query)
+    print(callback_query.message.message_id)
 
     await bot.edit_message_text(
         text=f"🌕\nPing: {ping_time} ms",
