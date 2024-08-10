@@ -29,7 +29,7 @@ async def ping_callback_handler(callback_query: types.CallbackQuery, bot):
     if callback_query.message:
         ping_start_time = time.time()
         await bot.edit_message_text(
-            text=f"🌕", '''Ping: {ping_time} ms'''
+            text=f"🌕",  # Here was the issue
             chat_id=callback_query.message.chat.id,
             message_id=callback_query.message.message_id
         )
@@ -43,7 +43,7 @@ async def ping_callback_handler(callback_query: types.CallbackQuery, bot):
     elif callback_query.inline_message_id:
         ping_start_time = time.time()
         await bot.edit_message_text(
-            text=f"🌕",
+            text=f"🌕",  # Here was the issue
             inline_message_id=callback_query.inline_message_id
         )
         ping_end_time = time.time()
