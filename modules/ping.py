@@ -30,13 +30,20 @@ async def ping_callback_handler(callback_query: types.CallbackQuery, bot):
 
     ping_end_time = time.time()
     ping_time = round((ping_end_time - ping_start_time) * 1000)
-    print(callback_query)
-    print(callback_query.message.message_id)
 
-    await bot.edit_message_text(
-        text=f"🌕\nPing: {ping_time} ms",
-        message_id=callback_query.message.message_id
-    )
+    if callback_query.message:
+        await bot.edit_message_text(
+            text=f"🌕\nPing: {ping_time} ms",
+            chat_id=callback_query.message.chat.id,
+            message_id=callback_query.message.message_id
+        )
+    elif callback_query.inline_message_id:
+        await bot.edit_message_text(
+            text=f"🌕\nPing: {ping_time} ms",
+            inline_message_id=callback_query.inline_message_id
+        )
+    else:
+        print("No valid message or inline message reference found.")
 
 
 def setup_tools_ping(dp, bot):
