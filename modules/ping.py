@@ -21,7 +21,7 @@ async def inline_ping(inline_query: InlineQuery, bot):
         reply_markup=builder.as_markup()
     )
 
-    await inline_query.answer([item])
+    await inline_query.answer([item], cache_time=0)
 
 
 async def ping_callback_handler(callback_query: types.CallbackQuery, bot):
