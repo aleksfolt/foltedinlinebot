@@ -16,6 +16,14 @@ bot = Bot(token=config.API_TOKEN)
 dp = Dispatcher(storage=MemoryStorage())
 
 
+def default_commands(inline_query):
+    return [
+        inline_ping(inline_query),
+        inline_ily(inline_query),
+        inline_system_info(inline_query)
+    ]
+
+
 @dp.inline_query()
 async def inline_handler(inline_query: types.InlineQuery):
     user_id = inline_query.from_user.id
@@ -30,6 +38,13 @@ async def inline_handler(inline_query: types.InlineQuery):
 
     query_text = inline_query.query.lower()
     print(query_text)
+    
+    if query_text == "":
+        await inline_query.answer(
+            results=default_commands(inline_query),
+            cache_time=1
+        )
+        return
 
     if query_text.startswith("wh"):
         await inline_weather(inline_query)
