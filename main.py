@@ -16,9 +16,9 @@ bot = Bot(token=config.API_TOKEN)
 dp = Dispatcher(storage=MemoryStorage())
 
 
-def default_commands(inline_query):
+def default_commands(inline_query, bot):
     return [
-        inline_ping(inline_query),
+        inline_ping(inline_query, bot),
         inline_ily(inline_query),
         inline_system_info(inline_query)
     ]
@@ -41,7 +41,7 @@ async def inline_handler(inline_query: types.InlineQuery):
     
     if query_text == "":
         await inline_query.answer(
-            results=default_commands(inline_query),
+            results=default_commands(inline_query, bot),
             cache_time=1
         )
         return
