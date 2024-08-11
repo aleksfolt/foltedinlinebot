@@ -39,13 +39,6 @@ async def inline_handler(inline_query: types.InlineQuery):
 
     query_text = inline_query.query.lower()
     print(query_text)
-    
-    if query_text == "":
-        await inline_query.answer(
-            results=await default_commands(inline_query, bot),
-            cache_time=0
-        )
-        return
 
     if query_text.startswith("wh"):
         await inline_weather(inline_query)
