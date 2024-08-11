@@ -4,6 +4,13 @@ from aiogram import types
 from aiogram.types import InlineQuery, InlineQueryResultArticle, InputTextMessageContent, InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 import config
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
+
+logger = logging.getLogger(__name__)
+
+logger.debug("Starting ping handler")
 
 
 async def inline_ping(inline_query: InlineQuery, bot):
