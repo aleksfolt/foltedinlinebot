@@ -18,9 +18,9 @@ dp = Dispatcher(storage=MemoryStorage())
 
 def default_commands(inline_query, bot):
     return [
-        inline_ping(inline_query, bot),
-        inline_ily(inline_query),
-        inline_system_info(inline_query)
+        await inline_ping(inline_query, bot),
+        await inline_ily(inline_query),
+        await inline_system_info(inline_query)
     ]
 
 
