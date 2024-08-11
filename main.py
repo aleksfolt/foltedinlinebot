@@ -17,11 +17,12 @@ dp = Dispatcher(storage=MemoryStorage())
 
 
 async def default_commands(inline_query, bot):
-    return [
-        await inline_ping(inline_query, bot),
-        await inline_ily(inline_query),
-        await inline_system_info(inline_query)
-    ]
+    results = await asyncio.gather(
+        inline_ping(inline_query, bot),
+        inline_ily(inline_query),
+        inline_system_info(inline_query)
+    )
+    return results
 
 
 @dp.inline_query()
