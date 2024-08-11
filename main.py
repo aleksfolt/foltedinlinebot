@@ -43,7 +43,7 @@ async def inline_handler(inline_query: types.InlineQuery):
     if query_text == "":
         await inline_query.answer(
             results=await default_commands(inline_query, bot),
-            cache_time=1
+            cache_time=0
         )
         return
 
