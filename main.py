@@ -28,7 +28,7 @@ async def default_commands(inline_query, bot):
 @dp.inline_query()
 async def inline_handler(inline_query: types.InlineQuery):
     user_id = inline_query.from_user.id
-    if user_id != config.AUTHORIZED_USER_ID:
+    if user_id not in config.AUTHORIZED_USER_ID:
         await inline_query.answer(
             results=[],
             cache_time=0,
