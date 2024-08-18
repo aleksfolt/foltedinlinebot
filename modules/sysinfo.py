@@ -62,6 +62,7 @@ async def inline_system_info(inline_query: InlineQuery):
 
     item = InlineQueryResultArticle(
         id=result_id,
+        cache_time=0,
         title="System Information",
         input_message_content=input_content
     )
