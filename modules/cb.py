@@ -23,6 +23,3 @@ async def inline_photo_with_caption_and_button(inline_query, bot):
     )
 
     await inline_query.answer([item], cache_time=0)
-
-def setup_tools_kb(dp):
-    dp.inline_query_handler(inline_photo_with_caption_and_button)
