@@ -10,6 +10,7 @@ from modules.wiki import inline_wiki, setup_tools_wiki
 from modules.ping import inline_ping, setup_tools_ping
 from modules.qr import inline_qr, setup_tools_qr
 from modules.tinyurl import inline_tinyurl, setup_tools_tinyurl
+from modules.cb import inline_photo_with_caption_and_button
 import config
 
 bot = Bot(token=config.API_TOKEN)
@@ -56,6 +57,8 @@ async def inline_handler(inline_query: types.InlineQuery):
         await inline_qr(inline_query) 
     elif query_text.startswith("url"):
     	await inline_tinyurl(inline_query)
+    elif query_text == "cb":
+        await inline_photo_with_caption_and_button(inline_query, bot)
 
 
 @dp.chosen_inline_result()
