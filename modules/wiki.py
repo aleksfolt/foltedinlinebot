@@ -42,3 +42,7 @@ async def inline_wiki(inline_query: InlineQuery):
 
     await inline_query.answer(articles)
     logger.info("Ответ отправлен пользователю")
+    
+    
+def setup_tools_wiki(dp):
+    dp.inline_query(inline_wiki)
