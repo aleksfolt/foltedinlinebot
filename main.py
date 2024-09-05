@@ -27,9 +27,46 @@ bot = Bot(token=config.API_TOKEN)
 dp = Dispatcher(storage=MemoryStorage())
 
 
+async def handle_empty_query(inline_query: types.InlineQuery):
+    results = [
+        await inline_ping(inline_query),
+        await inline_help(inline_query),
+        await inline_updates(inline_query)
+    ]
+    await inline_query.answer(results, cache_time=0)
+
+
+async def handle_specific_query(query_text, inline_query, bot):
+    inline_actions = {
+        "ping": inline_ping,
+        "ily": inline_ily,
+        "sysinfo": inline_system_info,
+        "qr": inline_qr,
+        "url": inline_tinyurl,
+        "help": inline_help,
+        "porn": inline_nswf,
+        "movie": inline_movie,
+        "cb": lambda iq: inline_photo_with_caption_and_button(iq, bot),
+        "pic": show_user_images,
+        "rdr": inline_redirect,
+        "tr": inline_translate,
+        "yt": inline_youtube_search,
+        "calc": inline_calculator,
+        "press": inline_f,
+        "update": inline_updates,
+        "wh": inline_weather,
+        "wiki": inline_wiki,
+        "duck": inline_search,
+    }
+
+    query_action = query_text.split()[0]
+    if query_action in inline_actions:
+        return await inline_actions[query_action](inline_query)
+    return None
+
+
 @dp.inline_query()
 async def inline_handler(inline_query: types.InlineQuery):
-    global item
     user_id = inline_query.from_user.id
     if user_id not in config.AUTHORIZED_USER_ID:
         await inline_query.answer(
@@ -41,56 +78,14 @@ async def inline_handler(inline_query: types.InlineQuery):
         return
 
     query_text = inline_query.query.lower()
-    print(query_text)
 
     if query_text == "":
-        results = []
-        results.append(await inline_ping(inline_query))
-        results.append(await inline_help(inline_query))
-        results.append(await inline_updates(inline_query))
-
-        await inline_query.answer(results, cache_time=0)
+        await handle_empty_query(inline_query)
         return
 
-    if query_text.startswith("wh"):
-        item = await inline_weather(inline_query)
-    elif query_text.startswith("duck"):
-        item = await inline_search(inline_query)
-    elif query_text.startswith("wiki"):
-        item = await inline_wiki(inline_query)
-    elif query_text == "ping":
-        item = await inline_ping(inline_query)
-    elif query_text == "ily":
-        item = await inline_ily(inline_query)
-    elif query_text == "sysinfo":
-        item = await inline_system_info(inline_query)
-    elif query_text.startswith("qr"):
-        item = await inline_qr(inline_query)
-    elif query_text.startswith("url"):
-        item = await inline_tinyurl(inline_query)
-    elif query_text == "help":
-        item = await inline_help(inline_query)
-    elif query_text.startswith("porn"):
-        item = await inline_nswf(inline_query)
-    elif query_text.startswith("movie"):
-        item = await inline_movie(inline_query)
-    elif query_text.startswith("cb"):
-        item = await inline_photo_with_caption_and_button(inline_query, bot)
-    elif query_text.startswith("pic"):
-        item = await show_user_images(inline_query)
-    elif query_text.startswith("rdr"):
-        item = await inline_redirect(inline_query)
-    elif query_text.startswith("tr"):
-        item = await inline_translate(inline_query)
-    elif query_text.startswith("yt"):
-        item = await inline_youtube_search(inline_query)
-    elif query_text.startswith("calc"):
-        item = await inline_calculator(inline_query)
-    elif query_text == "press f":
-        item = await inline_f(inline_query)
-    elif query_text == "update":
-        item = await inline_updates(inline_query)
-    else:
+    item = await handle_specific_query(query_text, inline_query, bot)
+
+    if item is None:
         await inline_query.answer(
             results=[],
             cache_time=0,
@@ -128,15 +123,20 @@ async def chosen_inline_result_handler(chosen_inline_result: types.ChosenInlineR
         if extra_text:
             extra_text = extra_text.replace("_", " ")
             extra_text = extra_text.replace("%20", " ")
+
         if extra_text:
             await cb_animation(bot, inline_message_id, asset, amount, extra_text)
         else:
             await cb_animation(bot, inline_message_id, asset, amount)
 
 
-if __name__ == "__main__":
+async def main():
     setup_tools_ping(dp, bot)
     setup_tools_youtube(dp, bot)
     setup_tools_f(dp, bot)
     dp.include_router(updates_router)
-    dp.run_polling(bot)
+    await dp.start_polling(bot, allowed_updates=dp.resolve_used_update_types())
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
