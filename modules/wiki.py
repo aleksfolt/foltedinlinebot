@@ -3,7 +3,6 @@ from aiogram.types import InlineQuery, InlineQueryResultArticle, InputTextMessag
 import wikipediaapi
 import hashlib
 
-# Настройка логгирования
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -19,7 +18,7 @@ async def inline_wiki(inline_query: InlineQuery):
         _, search_query = query_text.split(maxsplit=1)
     except ValueError as e:
         logger.error("Ошибка разбиения запроса: %s", e)
-        return  # Останавливаем обработку, если запрос неправильный
+        return
 
     logger.info("Поиск в Википедии по запросу: %s", search_query)
     page = wiki_wiki.page(search_query)
@@ -33,16 +32,12 @@ async def inline_wiki(inline_query: InlineQuery):
             title=page.title,
             input_message_content=InputTextMessageContent(
                 message_text=f"{page.title}\n\n{summary}\n\nRead more: {page.fullurl}"
-            )
+            ),
+            thumbnail_url="https://tinypic.host/images/2024/09/01/DALLE-2024-09-01-03.44.18---An-emoji-style-illustration-of-a-globe.-The-globe-should-be-simple-and-colorful-with-vibrant-blue-oceans-and-green-continents.-The-continents-should.webp"
         )
         articles.append(item)
         logger.info("Страница найдена: %s", page.title)
     else:
         logger.info("Страница не найдена: %s", search_query)
 
-    await inline_query.answer(articles)
-    logger.info("Ответ отправлен пользователю")
-    
-    
-def setup_tools_wiki(dp):
-    dp.inline_query(inline_wiki)
+    return articles

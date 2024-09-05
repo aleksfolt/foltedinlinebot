@@ -206,7 +206,7 @@ async def heart_animation(bot, inline_message_id):
         await bot.edit_message_text((arr[0] * (8 - i) + "\n") * (8 - i), inline_message_id=inline_message_id)
         await asyncio.sleep(0.3)
     for i in ["I", "I ❤️", "I ❤️ U", "I ❤️ U!"]:
-        await bot.edit_message_text(f"<b>{i}</b>", inline_message_id=inline_message_id)
+        await bot.edit_message_text(f"<b>{i}</b>", inline_message_id=inline_message_id, parse_mode="HTML")
         await asyncio.sleep(0.2)
 
 
@@ -223,11 +223,12 @@ async def inline_ily(inline_query: InlineQuery):
         id=result_id,
         type="article",
         title="Ily Animation",
+        thumbnail_url="https://tinypic.host/images/2024/09/01/DALLE-2024-09-01-03.24.22---A-detailed-illustration-of-a-heart-emoji-on-a-dark-blue-background.-The-heart-should-be-vibrant-red-with-a-smooth-glossy-texture-and-a-slight-shine.webp",
         input_message_content=input_content,
         reply_markup=builder.as_markup()
     )
 
-    await inline_query.answer([item])
+    return item
 
 
 def setup_tools_ily(dp, bot):

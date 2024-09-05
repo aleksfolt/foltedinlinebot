@@ -1,3 +1,4 @@
+import asyncio
 import hashlib
 import logging
 from aiogram.types import InlineQuery, InlineQueryResultArticle, InputTextMessageContent
@@ -52,9 +53,6 @@ async def inline_search(inline_query: InlineQuery):
         articles.append(item)
 
     try:
-        await inline_query.answer(articles, cache_time=0)
+        return articles
     except Exception as e:
         logging.error(f"Error while answering inline query: {e}")
-
-def setup_tools_search(dp):
-    pass
