@@ -14,16 +14,11 @@ FoltedInlineBot is an inline bot built using Python that allows users to interac
 2. Install dependencies:
    ```bash
    pip install -r req.txt
-
-
 ## Usage
 1. Set up a .env file with all tokens. All tokens are indicated in config.py.
 2. Run the bot:
    ```bash
    python3 main.py
-
-
-
 ## Contribution
 Feel free to submit pull requests and report issues to improve this bot.
 
