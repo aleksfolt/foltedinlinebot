@@ -3,6 +3,7 @@ from aiogram import Bot, Dispatcher, types
 from aiogram.fsm.storage.memory import MemoryStorage
 
 from modules.calc import inline_calculator
+from modules.gemini import gemini_questions, gemini_question, setup_tools_gemini
 from modules.help import inline_help
 from modules.movie import inline_movie
 from modules.nsfw import inline_nswf
@@ -57,6 +58,7 @@ async def handle_specific_query(query_text, inline_query, bot):
         "wh": inline_weather,
         "wiki": inline_wiki,
         "duck": inline_search,
+        "gemini": gemini_questions
     }
 
     query_action = query_text.split()[0]
@@ -104,6 +106,7 @@ async def inline_handler(inline_query: types.InlineQuery):
 async def chosen_inline_result_handler(chosen_inline_result: types.ChosenInlineResult):
     inline_message_id = chosen_inline_result.inline_message_id
     query = chosen_inline_result.query.lower()
+    user_id = chosen_inline_result.from_user.id  # Получаем user_id
 
     if query == "ily":
         await heart_animation(bot, inline_message_id)
@@ -128,12 +131,17 @@ async def chosen_inline_result_handler(chosen_inline_result: types.ChosenInlineR
             await cb_animation(bot, inline_message_id, asset, amount, extra_text)
         else:
             await cb_animation(bot, inline_message_id, asset, amount)
+    elif query.startswith("gemini"):
+        model = chosen_inline_result.result_id.split("_")[1]
+        query_text = query[len("gemini"):].strip()
+        await gemini_question(bot, inline_message_id, model, query_text, user_id)
 
 
 async def main():
     setup_tools_ping(dp, bot)
     setup_tools_youtube(dp, bot)
     setup_tools_f(dp, bot)
+    setup_tools_gemini(dp, bot)
     dp.include_router(updates_router)
     await dp.start_polling(bot, allowed_updates=dp.resolve_used_update_types())
 
