@@ -6,6 +6,7 @@ import google.generativeai as genai
 
 chat_histories = {}
 genai.configure(api_key=config.GEMINI_KEY)
+
 generation_config = {
   "temperature": 1,
   "top_p": 0.95,
@@ -18,7 +19,7 @@ async def get_model(model):
     model = genai.GenerativeModel(
         model_name=model,
         generation_config=generation_config,
-        system_instruction="Отвечай как можно короче."
+        system_instruction="Respond as concisely as possible."
     )
     return model
 
@@ -28,16 +29,21 @@ async def gemini_questions(inline_query):
     results = []
     models = ["gemini-1.5-pro", "gemini-1.0-pro", "gemini-1.5-pro-exp-0827",
               "gemini-1.5-flash", "gemini-1.5-flash-exp-0827", "gemini-1.5-flash-8b-exp-0827"]
-    initial_button = InlineKeyboardButton(text="⏳", callback_data="none")
+
+    initial_button = InlineKeyboardButton(text="⏳ Waiting for response", callback_data="none")
     initial_keyboard = InlineKeyboardMarkup(inline_keyboard=[[initial_button]])
+
     for model in models:
-        input_content = InputTextMessageContent(message_text=f"Generating answer\nModel: {model}", parse_mode="HTML",
-                                                disable_web_page_preview=True)
+        input_content = InputTextMessageContent(
+            message_text=f"✨ Generating response...\n💡 Model: <b>{model}</b>",
+            parse_mode="HTML",
+            disable_web_page_preview=True
+        )
         item = InlineQueryResultArticle(
             id=f"gemini_{model}",
-            title=model,
+            title=f"🤖 {model}",
             input_message_content=input_content,
-            description=f"Ask a question to {model}",
+            description=f"Ask a question to {model} ",
             reply_markup=initial_keyboard
         )
         results.append(item)
@@ -49,7 +55,6 @@ async def gemini_question(bot, inline_message_id, modell, query_text, user_id):
         chat_histories[user_id] = []
 
     model = await get_model(modell)
-
 
     chat_histories[user_id].append({
         "role": "user",
@@ -67,10 +72,13 @@ async def gemini_question(bot, inline_message_id, modell, query_text, user_id):
         "parts": [response.text],
     })
 
-    answer = f"User: {query_text}\n\n{modell}: {response.text}"
+    answer = (
+        f"👤 *User:* _{query_text}_\n\n"
+        f"🤖 *{modell}:* {response.text}"
+    )
 
     keyboard = InlineKeyboardBuilder()
-    keyboard.add(InlineKeyboardButton(text="Clear chat history", callback_data=f"clear_chat:{user_id}"))
+    keyboard.add(InlineKeyboardButton(text="🗑 Clear chat history", callback_data=f"clear_chat:{user_id}"))
 
     try:
         await bot.edit_message_text(
@@ -96,7 +104,7 @@ async def clear_chat_handler(callback_query: types.CallbackQuery, bot):
     if callback_query.from_user.id != user_id:
         await bot.answer_callback_query(
             callback_query.id,
-            text="You are not authorized to use this button.",
+            text="❌ You are not authorized to perform this action.",
             show_alert=True
         )
         return
@@ -106,11 +114,9 @@ async def clear_chat_handler(callback_query: types.CallbackQuery, bot):
 
     await bot.answer_callback_query(
         callback_query.id,
-        text="Chat history cleared!"
+        text="✅ Chat history successfully cleared!"
     )
-
 
 
 def setup_tools_gemini(dp, bot):
     dp.callback_query(lambda c: c.data.startswith('clear_chat'))(clear_chat_handler)
-
